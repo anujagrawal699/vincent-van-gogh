@@ -51,12 +51,14 @@ export interface ActivityFilters {
   timeOfDay?: TimeOfDay;
 }
 
+export interface WeekendSchedule {
+  saturday: ScheduledActivity[];
+  sunday: ScheduledActivity[];
+}
+
 export interface WeekendPlanState {
   activities: Activity[]; // library
-  schedule: {
-    saturday: ScheduledActivity[];
-    sunday: ScheduledActivity[];
-  };
+  schedule: WeekendSchedule;
   selectedTheme: WeekendTheme | null;
   filters: ActivityFilters;
 }

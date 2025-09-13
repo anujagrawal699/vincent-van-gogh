@@ -20,6 +20,7 @@ Transform your weekend planning into an art form. Weekendly is an interactive we
 - **Smart Search** — Filter by activity type, energy level, and time of day
 - **Theme-Based Suggestions** — Get personalized activity recommendations based on your weekend theme
 - **Conflict Detection** — Automatically spots scheduling overlaps
+- **AI Schedule Analysis** — Inline AI insights panel gives a friendly, concise weekend summary
 - **Share & Export** — Download your weekend plan as a beautiful poster
 
 **Artistic Touch**
@@ -44,6 +45,7 @@ Transform your weekend planning into an art form. Weekendly is an interactive we
 - **Tailwind CSS** — Beautiful, responsive styling
 - **@dnd-kit** — Smooth drag-and-drop interactions
 - **html-to-image** — Export functionality
+- **@google/generative-ai** — AI-powered schedule analysis with Gemini
 - **Vitest** — Comprehensive testing suite
 
 ## Architecture

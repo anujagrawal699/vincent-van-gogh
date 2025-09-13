@@ -13,6 +13,7 @@ import ActivityCard from "./components/ActivityLibrary/ActivityCard";
 import DayColumn from "./components/WeekendSchedule/DayColumn";
 import ThemeSelector from "./components/ThemeSelector";
 import ShareModal from "./components/ShareModal";
+import AIAnalysisPanel from "./components/AIAnalysisPanel";
 
 function AppShell() {
   const { dispatch, state } = useWeekendPlan();
@@ -106,11 +107,14 @@ function AppShell() {
       </header>
 
       <main className="mx-auto max-w-6xl px-3 sm:px-4 py-4 sm:py-6">
-        {/* Mobile: Stack layout */}
+        {/* Mobile layout */}
         <div className="block lg:hidden space-y-6">
           <section>
-            <h2 className="mb-3 text-lg font-semibold">Your Weekend Plan</h2>
-            <div className="space-y-4">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-lg font-semibold">Your Weekend Plan</h2>
+            </div>
+            <AIAnalysisPanel />
+            <div className="mt-4 space-y-4">
               <DayColumn day="saturday" title="Saturday" />
               <DayColumn day="sunday" title="Sunday" />
             </div>
@@ -127,19 +131,22 @@ function AppShell() {
           </section>
         </div>
 
-        {/* Desktop: Side-by-side layout */}
+        {/* Desktop layout */}
         <div className="hidden lg:grid lg:grid-cols-3 gap-6">
           <section className="lg:col-span-1 flex flex-col">
             <h2 className="mb-3 text-lg font-semibold">Activity Library</h2>
             <div className="relative pr-1 flex-1">
-              <div className="overflow-y-auto overflow-x-hidden h-[calc(100vh-220px)] overscroll-contain pr-2 custom-scrollbar">
+              <div className="overflow-y-auto overflow-x-hidden h-[calc(100vh-150px)] overscroll-contain pr-2 custom-scrollbar">
                 <ActivityLibrary />
               </div>
             </div>
           </section>
           <section className="lg:col-span-2">
-            <h2 className="mb-3 text-lg font-semibold">Your Weekend Plan</h2>
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-lg font-semibold">Your Weekend Plan</h2>
+            </div>
+            <AIAnalysisPanel />
+            <div className="mt-4 grid grid-cols-1 gap-6 xl:grid-cols-2">
               <DayColumn day="saturday" title="Saturday" />
               <DayColumn day="sunday" title="Sunday" />
             </div>
