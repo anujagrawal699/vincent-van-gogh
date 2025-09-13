@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ImageExportService } from '../services/imageExportService';
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { ImageExportService } from "../services/imageExportService";
 
 const createMockElement = (width = 100, height = 100) => {
   const mockElement = {
@@ -19,27 +19,27 @@ const createMockElement = (width = 100, height = 100) => {
   return mockElement as unknown as HTMLElement;
 };
 
-vi.mock('html-to-image', () => ({
+vi.mock("html-to-image", () => ({
   toBlob: vi.fn(),
 }));
 
-describe('ImageExportService', () => {
+describe("ImageExportService", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    
+
     globalThis.getComputedStyle = vi.fn(() => ({
-      padding: '0px',
+      padding: "0px",
     })) as unknown as typeof getComputedStyle;
-    
-    Object.defineProperty(globalThis, 'URL', {
+
+    Object.defineProperty(globalThis, "URL", {
       value: {
-        createObjectURL: vi.fn(() => 'mock-url'),
+        createObjectURL: vi.fn(() => "mock-url"),
         revokeObjectURL: vi.fn(),
       },
       configurable: true,
     });
 
-    Object.defineProperty(globalThis, 'navigator', {
+    Object.defineProperty(globalThis, "navigator", {
       value: {
         clipboard: {
           write: vi.fn(),
@@ -48,7 +48,7 @@ describe('ImageExportService', () => {
       configurable: true,
     });
 
-    Object.defineProperty(globalThis, 'window', {
+    Object.defineProperty(globalThis, "window", {
       value: {
         ClipboardItem: vi.fn(),
       },
@@ -56,8 +56,8 @@ describe('ImageExportService', () => {
     });
   });
 
-  describe('getElementDimensions', () => {
-    it('returns element dimensions with padding', () => {
+  describe("getElementDimensions", () => {
+    it("returns element dimensions with padding", () => {
       const mockElement = createMockElement(200, 150);
       const result = ImageExportService.getElementDimensions(mockElement);
 
@@ -68,13 +68,13 @@ describe('ImageExportService', () => {
     });
   });
 
-  describe('isClipboardSupported', () => {
-    it('returns true when clipboard API is supported', () => {
+  describe("isClipboardSupported", () => {
+    it("returns true when clipboard API is supported", () => {
       expect(ImageExportService.isClipboardSupported()).toBe(true);
     });
 
-    it('returns false when navigator is undefined', () => {
-      Object.defineProperty(globalThis, 'navigator', {
+    it("returns false when navigator is undefined", () => {
+      Object.defineProperty(globalThis, "navigator", {
         value: undefined,
         configurable: true,
       });
@@ -83,53 +83,60 @@ describe('ImageExportService', () => {
     });
   });
 
-  describe('downloadBlob', () => {
-    it('creates download link and triggers download', () => {
-      const mockBlob = new Blob(['test'], { type: 'image/png' });
-      const filename = 'test-image.png';
+  describe("downloadBlob", () => {
+    it("creates download link and triggers download", () => {
+      const mockBlob = new Blob(["test"], { type: "image/png" });
+      const filename = "test-image.png";
 
       const mockLink = {
-        href: '',
-        download: '',
+        href: "",
+        download: "",
         click: vi.fn(),
       };
-      vi.spyOn(document, 'createElement').mockReturnValue(mockLink as unknown as HTMLAnchorElement);
+      vi.spyOn(document, "createElement").mockReturnValue(
+        mockLink as unknown as HTMLAnchorElement
+      );
 
       ImageExportService.downloadBlob(mockBlob, filename);
 
       expect(globalThis.URL.createObjectURL).toHaveBeenCalledWith(mockBlob);
-      expect(mockLink.href).toBe('mock-url');
+      expect(mockLink.href).toBe("mock-url");
       expect(mockLink.download).toBe(filename);
       expect(mockLink.click).toHaveBeenCalled();
-      expect(globalThis.URL.revokeObjectURL).toHaveBeenCalledWith('mock-url');
+      expect(globalThis.URL.revokeObjectURL).toHaveBeenCalledWith("mock-url");
     });
   });
 
-  describe('copyBlobToClipboard', () => {
-    it('copies blob to clipboard when supported', async () => {
-      const mockBlob = new Blob(['test'], { type: 'image/png' });
+  describe("copyBlobToClipboard", () => {
+    it("copies blob to clipboard when supported", async () => {
+      const mockBlob = new Blob(["test"], { type: "image/png" });
       const mockClipboardItem = {};
-      
-      (globalThis.window.ClipboardItem as unknown as ReturnType<typeof vi.fn>).mockReturnValue(mockClipboardItem);
+
+      (
+        globalThis.window.ClipboardItem as unknown as ReturnType<typeof vi.fn>
+      ).mockReturnValue(mockClipboardItem);
 
       await ImageExportService.copyBlobToClipboard(mockBlob);
 
       expect(globalThis.window.ClipboardItem).toHaveBeenCalledWith({
-        'image/png': mockBlob,
+        "image/png": mockBlob,
       });
-      expect(globalThis.navigator.clipboard.write).toHaveBeenCalledWith([mockClipboardItem]);
+      expect(globalThis.navigator.clipboard.write).toHaveBeenCalledWith([
+        mockClipboardItem,
+      ]);
     });
 
-    it('throws error when clipboard is not supported', async () => {
-      Object.defineProperty(globalThis, 'navigator', {
+    it("throws error when clipboard is not supported", async () => {
+      Object.defineProperty(globalThis, "navigator", {
         value: {},
         configurable: true,
       });
 
-      const mockBlob = new Blob(['test'], { type: 'image/png' });
+      const mockBlob = new Blob(["test"], { type: "image/png" });
 
-      await expect(ImageExportService.copyBlobToClipboard(mockBlob))
-        .rejects.toThrow('Clipboard API is not supported in this browser');
+      await expect(
+        ImageExportService.copyBlobToClipboard(mockBlob)
+      ).rejects.toThrow("Clipboard API is not supported in this browser");
     });
   });
 });

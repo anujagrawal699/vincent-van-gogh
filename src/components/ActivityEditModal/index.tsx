@@ -1,11 +1,6 @@
-/**
- * ActivityEditModal component - Handles editing of scheduled activities
- * Separated from ScheduledActivity component for better maintainability
- */
-
-import React, { useState, useEffect } from 'react';
-import type { ScheduledActivity, Day, Slot } from '../../types';
-import { useWeekendPlan } from '../../hooks/useWeekendPlan';
+import React, { useState, useEffect } from "react";
+import type { ScheduledActivity, Day, Slot } from "../../types";
+import { useWeekendPlan } from "../../hooks/useWeekendPlan";
 
 interface ActivityEditModalProps {
   activity: ScheduledActivity;
@@ -13,7 +8,11 @@ interface ActivityEditModalProps {
   onClose: () => void;
 }
 
-export function ActivityEditModal({ activity, isOpen, onClose }: ActivityEditModalProps) {
+export function ActivityEditModal({
+  activity,
+  isOpen,
+  onClose,
+}: ActivityEditModalProps) {
   const { dispatch } = useWeekendPlan();
   const [day, setDay] = useState<Day>(activity.day);
   const [slot, setSlot] = useState<Slot>(activity.slot);
@@ -30,8 +29,8 @@ export function ActivityEditModal({ activity, isOpen, onClose }: ActivityEditMod
   useEffect(() => {
     if (isOpen) {
       const previousOverflow = document.body.style.overflow;
-      document.body.style.overflow = 'hidden';
-      
+      document.body.style.overflow = "hidden";
+
       return () => {
         document.body.style.overflow = previousOverflow;
       };
@@ -40,7 +39,7 @@ export function ActivityEditModal({ activity, isOpen, onClose }: ActivityEditMod
 
   const handleSave = () => {
     dispatch({
-      type: 'edit',
+      type: "edit",
       payload: {
         id: activity.id,
         updates: { day, slot, durationHours: duration },
@@ -50,10 +49,10 @@ export function ActivityEditModal({ activity, isOpen, onClose }: ActivityEditMod
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       onClose();
     }
-    if (event.key === 'Enter' && event.ctrlKey) {
+    if (event.key === "Enter" && event.ctrlKey) {
       handleSave();
     }
   };
@@ -72,7 +71,7 @@ export function ActivityEditModal({ activity, isOpen, onClose }: ActivityEditMod
         <div className="mb-2 text-sm font-semibold" id="edit-modal-title">
           Edit Activity
         </div>
-        
+
         <div className="flex flex-col gap-2">
           <label className="text-xs text-gray-600">
             Day
@@ -85,7 +84,7 @@ export function ActivityEditModal({ activity, isOpen, onClose }: ActivityEditMod
               <option value="sunday">Sunday</option>
             </select>
           </label>
-          
+
           <label className="text-xs text-gray-600">
             Time Slot
             <select
@@ -99,7 +98,7 @@ export function ActivityEditModal({ activity, isOpen, onClose }: ActivityEditMod
               <option value="night">Night</option>
             </select>
           </label>
-          
+
           <label className="text-xs text-gray-600">
             Duration (hours)
             <input
@@ -108,11 +107,11 @@ export function ActivityEditModal({ activity, isOpen, onClose }: ActivityEditMod
               max={6}
               className="mt-1 w-full rounded-md border border-gray-300 px-2 py-1"
               value={duration}
-              onChange={(e) => setDuration(parseInt(e.target.value || '1', 10))}
+              onChange={(e) => setDuration(parseInt(e.target.value || "1", 10))}
             />
           </label>
         </div>
-        
+
         <div className="mt-3 flex justify-end gap-2">
           <button
             className="rounded-md border px-3 py-1 text-sm"

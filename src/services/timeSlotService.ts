@@ -1,14 +1,19 @@
 // Service for handling time slot conflicts and calculations
-import type { ScheduledActivity, Slot } from '../types';
+import type { ScheduledActivity, Slot } from "../types";
 
 export const SLOT_WINDOWS = {
-  morning: { start: '08:00', end: '12:00', capacityHours: 4 },
-  afternoon: { start: '12:00', end: '17:00', capacityHours: 5 },
-  evening: { start: '17:00', end: '21:00', capacityHours: 4 },
-  night: { start: '21:00', end: '02:00', capacityHours: 5 },
+  morning: { start: "08:00", end: "12:00", capacityHours: 4 },
+  afternoon: { start: "12:00", end: "17:00", capacityHours: 5 },
+  evening: { start: "17:00", end: "21:00", capacityHours: 4 },
+  night: { start: "21:00", end: "02:00", capacityHours: 5 },
 } as const;
 
-export const TIME_SLOTS: readonly Slot[] = ['morning', 'afternoon', 'evening', 'night'] as const;
+export const TIME_SLOTS: readonly Slot[] = [
+  "morning",
+  "afternoon",
+  "evening",
+  "night",
+] as const;
 
 export class TimeSlotService {
   // Gets the index of a time slot
@@ -37,16 +42,25 @@ export class TimeSlotService {
   }
 
   // Checks if two activities have a time conflict
-  static hasConflict(activityA: ScheduledActivity, activityB: ScheduledActivity): boolean {
+  static hasConflict(
+    activityA: ScheduledActivity,
+    activityB: ScheduledActivity
+  ): boolean {
     if (activityA.day !== activityB.day) {
       return false;
     }
 
-    const slotsA = this.getSpannedSlots(activityA.slot, activityA.durationHours);
-    const slotsB = this.getSpannedSlots(activityB.slot, activityB.durationHours);
+    const slotsA = this.getSpannedSlots(
+      activityA.slot,
+      activityA.durationHours
+    );
+    const slotsB = this.getSpannedSlots(
+      activityB.slot,
+      activityB.durationHours
+    );
 
     // Check if activities share any time slots
-    return slotsA.some(slotA => slotsB.includes(slotA));
+    return slotsA.some((slotA) => slotsB.includes(slotA));
   }
 
   // Detects all conflicts in a list of scheduled activities
@@ -55,10 +69,10 @@ export class TimeSlotService {
     conflictPairs: [ScheduledActivity, ScheduledActivity][];
   } {
     const conflictPairs: [ScheduledActivity, ScheduledActivity][] = [];
-    
+
     const activitiesByDay = this.groupActivitiesByDay(activities);
 
-    (['saturday', 'sunday'] as const).forEach(day => {
+    (["saturday", "sunday"] as const).forEach((day) => {
       const dayActivities = activitiesByDay[day];
       this.findConflictsInDay(dayActivities, conflictPairs);
     });
@@ -71,12 +85,12 @@ export class TimeSlotService {
 
   // Groups activities by day
   private static groupActivitiesByDay(activities: ScheduledActivity[]) {
-    const byDay: Record<'saturday' | 'sunday', ScheduledActivity[]> = {
+    const byDay: Record<"saturday" | "sunday", ScheduledActivity[]> = {
       saturday: [],
       sunday: [],
     };
 
-    activities.forEach(activity => {
+    activities.forEach((activity) => {
       byDay[activity.day].push(activity);
     });
 
@@ -88,9 +102,11 @@ export class TimeSlotService {
     dayActivities: ScheduledActivity[],
     conflictPairs: [ScheduledActivity, ScheduledActivity][]
   ): void {
-    TIME_SLOTS.forEach(slot => {
-      const activitiesInSlot = dayActivities.filter(activity =>
-        this.getSpannedSlots(activity.slot, activity.durationHours).includes(slot)
+    TIME_SLOTS.forEach((slot) => {
+      const activitiesInSlot = dayActivities.filter((activity) =>
+        this.getSpannedSlots(activity.slot, activity.durationHours).includes(
+          slot
+        )
       );
 
       const totalDuration = activitiesInSlot.reduce(
@@ -121,14 +137,24 @@ export class TimeSlotService {
   }
 
   // Calculates the total duration of activities in a specific slot
-  static getTotalDurationInSlot(activities: ScheduledActivity[], slot: Slot): number {
+  static getTotalDurationInSlot(
+    activities: ScheduledActivity[],
+    slot: Slot
+  ): number {
     return activities
-      .filter(activity => this.getSpannedSlots(activity.slot, activity.durationHours).includes(slot))
+      .filter((activity) =>
+        this.getSpannedSlots(activity.slot, activity.durationHours).includes(
+          slot
+        )
+      )
       .reduce((sum, activity) => sum + activity.durationHours, 0);
   }
 
   // Checks if a slot is over capacity
-  static isSlotOverCapacity(activities: ScheduledActivity[], slot: Slot): boolean {
+  static isSlotOverCapacity(
+    activities: ScheduledActivity[],
+    slot: Slot
+  ): boolean {
     const totalDuration = this.getTotalDurationInSlot(activities, slot);
     return totalDuration > SLOT_WINDOWS[slot].capacityHours;
   }

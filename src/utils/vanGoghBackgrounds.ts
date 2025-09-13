@@ -1,5 +1,4 @@
 // Van Gogh paintings for each theme
-// Using local images from public directory
 
 export const vanGoghPaintings = {
   'default': {

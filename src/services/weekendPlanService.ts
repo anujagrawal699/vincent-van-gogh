@@ -1,6 +1,6 @@
 // Service layer for weekend plan operations
-import type { Activity, ScheduledActivity, Day, Slot } from '../types';
-import { uid } from '../utils/timeUtils';
+import type { Activity, ScheduledActivity, Day, Slot } from "../types";
+import { uid } from "../utils/timeUtils";
 
 export class WeekendPlanService {
   // Creates a scheduled activity instance
@@ -11,7 +11,7 @@ export class WeekendPlanService {
     durationHours?: number
   ): ScheduledActivity {
     return {
-      id: uid('sched'),
+      id: uid("sched"),
       activity,
       day,
       slot,
@@ -28,56 +28,63 @@ export class WeekendPlanService {
       return activityList[Math.floor(Math.random() * activityList.length)];
     };
 
-    const getActivitiesByCategory = (category: Activity['category']): Activity[] => {
-      return activities.filter(a => a.category === category);
+    const getActivitiesByCategory = (
+      category: Activity["category"]
+    ): Activity[] => {
+      return activities.filter((a) => a.category === category);
     };
 
-      const createDaySchedule = (day: Day): ScheduledActivity[] => {
+    const createDaySchedule = (day: Day): ScheduledActivity[] => {
       // Morning: Wellness activity
       const morningActivity = this.createScheduledActivity(
-        pickRandomActivity(getActivitiesByCategory('wellness')),
+        pickRandomActivity(getActivitiesByCategory("wellness")),
         day,
-        'morning',
+        "morning",
         1
       );
 
       // Afternoon: Outdoor activity
       const afternoonActivity = this.createScheduledActivity(
-        pickRandomActivity(getActivitiesByCategory('outdoor')),
+        pickRandomActivity(getActivitiesByCategory("outdoor")),
         day,
-        'afternoon',
+        "afternoon",
         2
       );
 
       // Evening: Meal activity
       const eveningActivity = this.createScheduledActivity(
-        pickRandomActivity(getActivitiesByCategory('meal')),
+        pickRandomActivity(getActivitiesByCategory("meal")),
         day,
-        'evening',
+        "evening",
         2
       );
 
       // Night: Mix of social/outdoor/indoor/meal activities
       const nightCategoryPool: Activity[] = [
-        ...getActivitiesByCategory('social'),
-        ...getActivitiesByCategory('outdoor'),
-        ...getActivitiesByCategory('indoor'),
-        ...getActivitiesByCategory('meal'),
+        ...getActivitiesByCategory("social"),
+        ...getActivitiesByCategory("outdoor"),
+        ...getActivitiesByCategory("indoor"),
+        ...getActivitiesByCategory("meal"),
       ];
 
       const nightActivity = this.createScheduledActivity(
         pickRandomActivity(nightCategoryPool),
         day,
-        'night',
+        "night",
         1
       );
 
-      return [morningActivity, afternoonActivity, eveningActivity, nightActivity];
+      return [
+        morningActivity,
+        afternoonActivity,
+        eveningActivity,
+        nightActivity,
+      ];
     };
 
     return {
-      saturday: createDaySchedule('saturday'),
-      sunday: createDaySchedule('sunday'),
+      saturday: createDaySchedule("saturday"),
+      sunday: createDaySchedule("sunday"),
     };
   }
 
@@ -86,8 +93,8 @@ export class WeekendPlanService {
     schedule: { saturday: ScheduledActivity[]; sunday: ScheduledActivity[] },
     activityId: string
   ): { saturday: ScheduledActivity[]; sunday: ScheduledActivity[] } {
-    const removeById = (arr: ScheduledActivity[]) => 
-      arr.filter(activity => activity.id !== activityId);
+    const removeById = (arr: ScheduledActivity[]) =>
+      arr.filter((activity) => activity.id !== activityId);
 
     return {
       saturday: removeById(schedule.saturday),
@@ -99,12 +106,18 @@ export class WeekendPlanService {
   static updateActivityInSchedule(
     schedule: { saturday: ScheduledActivity[]; sunday: ScheduledActivity[] },
     activityId: string,
-    updates: Partial<Omit<ScheduledActivity, 'id' | 'activity'>> & { activity?: Activity }
+    updates: Partial<Omit<ScheduledActivity, "id" | "activity">> & {
+      activity?: Activity;
+    }
   ): { saturday: ScheduledActivity[]; sunday: ScheduledActivity[] } {
     const updateById = (arr: ScheduledActivity[]) =>
-      arr.map(activity =>
+      arr.map((activity) =>
         activity.id === activityId
-          ? { ...activity, ...updates, activity: updates.activity ?? activity.activity }
+          ? {
+              ...activity,
+              ...updates,
+              activity: updates.activity ?? activity.activity,
+            }
           : activity
       );
 

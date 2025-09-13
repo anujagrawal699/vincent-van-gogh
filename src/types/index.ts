@@ -1,9 +1,15 @@
 // Core domain types for Weekendly
 
-export type Category = 'meal' | 'outdoor' | 'indoor' | 'social' | 'wellness' | 'creative';
-export type TimeOfDay = 'morning' | 'afternoon' | 'evening' | 'night' | 'any';
-export type Energy = 'low' | 'medium' | 'high';
-export type Day = 'saturday' | 'sunday';
+export type Category =
+  | "meal"
+  | "outdoor"
+  | "indoor"
+  | "social"
+  | "wellness"
+  | "creative";
+export type TimeOfDay = "morning" | "afternoon" | "evening" | "night" | "any";
+export type Energy = "low" | "medium" | "high";
+export type Day = "saturday" | "sunday";
 
 export interface Activity {
   id: string;
@@ -28,13 +34,12 @@ export interface WeekendTheme {
   vanGoghImage?: string; // URL or path to the painting image
 }
 
-export type Slot = 'morning' | 'afternoon' | 'evening' | 'night';
+export type Slot = "morning" | "afternoon" | "evening" | "night";
 
 export interface ScheduledActivity {
   id: string; // unique per scheduled instance
   activity: Activity;
   day: Day;
-  // Start slot; duration may span multiple slots implicitly
   slot: Slot;
   durationHours: number; // default to activity.duration
 }
@@ -42,7 +47,7 @@ export interface ScheduledActivity {
 export interface ActivityFilters {
   query: string;
   categories: Category[]; // empty => all
-  energy?: Energy | 'any';
+  energy?: Energy | "any";
   timeOfDay?: TimeOfDay;
 }
 
@@ -57,11 +62,19 @@ export interface WeekendPlanState {
 }
 
 export type WeekendPlanAction =
-  | { type: 'add'; payload: Omit<ScheduledActivity, 'id'> }
-  | { type: 'remove'; payload: { id: string } }
-  | { type: 'edit'; payload: { id: string; updates: Partial<Omit<ScheduledActivity, 'id' | 'activity'>> & { activity?: Activity } } }
-  | { type: 'setTheme'; payload: WeekendTheme | null }
-  | { type: 'setFilters'; payload: Partial<ActivityFilters> }
-  | { type: 'clear' }
-  | { type: 'hydrate'; payload: Partial<WeekendPlanState> }
-  | { type: 'randomize' };
+  | { type: "add"; payload: Omit<ScheduledActivity, "id"> }
+  | { type: "remove"; payload: { id: string } }
+  | {
+      type: "edit";
+      payload: {
+        id: string;
+        updates: Partial<Omit<ScheduledActivity, "id" | "activity">> & {
+          activity?: Activity;
+        };
+      };
+    }
+  | { type: "setTheme"; payload: WeekendTheme | null }
+  | { type: "setFilters"; payload: Partial<ActivityFilters> }
+  | { type: "clear" }
+  | { type: "hydrate"; payload: Partial<WeekendPlanState> }
+  | { type: "randomize" };

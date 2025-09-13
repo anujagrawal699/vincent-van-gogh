@@ -1,18 +1,13 @@
-/**
- * ScheduledActivity component - Displays a scheduled activity in the weekend plan
- * Refactored to separate modal logic for better maintainability
- */
+import { useState } from "react";
+import type { ScheduledActivity as SA } from "../../types";
+import { ActivityEditModal } from "../ActivityEditModal";
 
-import { useState } from 'react';
-import type { ScheduledActivity as SA } from '../../types';
-import { ActivityEditModal } from '../ActivityEditModal';
-
-export function ScheduledActivity({ 
-  item, 
-  onRemove 
-}: { 
-  item: SA; 
-  onRemove?: (id: string) => void; 
+export function ScheduledActivity({
+  item,
+  onRemove,
+}: {
+  item: SA;
+  onRemove?: (id: string) => void;
 }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -39,9 +34,11 @@ export function ScheduledActivity({
         <span className="text-base sm:text-lg flex-shrink-0" aria-hidden>
           {item.activity.icon}
         </span>
-        
+
         <div className="min-w-0 flex-1">
-          <div className="font-medium truncate text-sm">{item.activity.name}</div>
+          <div className="font-medium truncate text-sm">
+            {item.activity.name}
+          </div>
           <div className="text-xs text-gray-500">
             {item.durationHours}h • {item.activity.category}
           </div>
@@ -56,7 +53,7 @@ export function ScheduledActivity({
             <span className="hidden sm:inline">Edit</span>
             <span className="sm:hidden">✏️</span>
           </button>
-          
+
           {onRemove && (
             <button
               className="text-xs text-gray-600 hover:text-red-600 px-1 py-1 rounded hover:bg-red-50"

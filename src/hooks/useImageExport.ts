@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { ImageExportService } from '../services/imageExportService';
+import { useState, useCallback } from "react";
+import { ImageExportService } from "../services/imageExportService";
 
 export interface UseImageExportResult {
   isExporting: boolean;
@@ -24,41 +24,47 @@ export function useImageExport(
     setTimeout(() => setter(false), 1500);
   }, []);
 
-  const downloadPNG = useCallback(async (element: HTMLElement, filename = 'weekendly-plan.png') => {
-    try {
-      setIsExporting(true);
-      onExportingChange?.(true);
-      
-      await ImageExportService.downloadElementAsPNG(element, filename);
-      setTemporaryFlag(setJustDownloaded);
-    } catch (error) {
-      console.warn('Export failed:', error);
-      throw error;
-    } finally {
-      setIsExporting(false);
-      onExportingChange?.(false);
-    }
-  }, [onExportingChange, setTemporaryFlag]);
+  const downloadPNG = useCallback(
+    async (element: HTMLElement, filename = "weekendly-plan.png") => {
+      try {
+        setIsExporting(true);
+        onExportingChange?.(true);
 
-  const copyPNG = useCallback(async (element: HTMLElement) => {
-    if (!isClipboardSupported) {
-      throw new Error('Clipboard is not supported');
-    }
+        await ImageExportService.downloadElementAsPNG(element, filename);
+        setTemporaryFlag(setJustDownloaded);
+      } catch (error) {
+        console.warn("Export failed:", error);
+        throw error;
+      } finally {
+        setIsExporting(false);
+        onExportingChange?.(false);
+      }
+    },
+    [onExportingChange, setTemporaryFlag]
+  );
 
-    try {
-      setIsExporting(true);
-      onExportingChange?.(true);
-      
-      await ImageExportService.copyElementToClipboard(element);
-      setTemporaryFlag(setJustCopied);
-    } catch (error) {
-      console.warn('Copy failed:', error);
-      throw error;
-    } finally {
-      setIsExporting(false);
-      onExportingChange?.(false);
-    }
-  }, [isClipboardSupported, onExportingChange, setTemporaryFlag]);
+  const copyPNG = useCallback(
+    async (element: HTMLElement) => {
+      if (!isClipboardSupported) {
+        throw new Error("Clipboard is not supported");
+      }
+
+      try {
+        setIsExporting(true);
+        onExportingChange?.(true);
+
+        await ImageExportService.copyElementToClipboard(element);
+        setTemporaryFlag(setJustCopied);
+      } catch (error) {
+        console.warn("Copy failed:", error);
+        throw error;
+      } finally {
+        setIsExporting(false);
+        onExportingChange?.(false);
+      }
+    },
+    [isClipboardSupported, onExportingChange, setTemporaryFlag]
+  );
 
   return {
     isExporting,

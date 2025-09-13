@@ -10,7 +10,7 @@ export function DayColumn({
 }) {
   const { state, conflicts } = useWeekendPlan();
   const hasConflict = conflicts.hasConflict && state.schedule[day].length > 1;
-  
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">

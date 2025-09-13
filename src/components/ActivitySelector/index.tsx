@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { useActivitySuggestions } from '../../hooks/useActivitySuggestions';
-import { useWeekendPlan } from '../../hooks/useWeekendPlan';
-import type { Activity, Day, Slot } from '../../types';
-import ActivityCard from '../ActivityLibrary/ActivityCard';
-import SearchBar from '../ActivityLibrary/SearchBar';
-import CategoryFilter from '../ActivityLibrary/CategoryFilter';
-import { Plus, X } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { useActivitySuggestions } from "../../hooks/useActivitySuggestions";
+import { useWeekendPlan } from "../../hooks/useWeekendPlan";
+import type { Activity, Day, Slot } from "../../types";
+import ActivityCard from "../ActivityLibrary/ActivityCard";
+import SearchBar from "../ActivityLibrary/SearchBar";
+import CategoryFilter from "../ActivityLibrary/CategoryFilter";
+import { Plus, X } from "lucide-react";
 
 interface ActivitySelectorProps {
   day: Day;
@@ -14,25 +14,31 @@ interface ActivitySelectorProps {
   onClose: () => void;
 }
 
-export function ActivitySelectorModal({ day, slot, onClose }: ActivitySelectorProps) {
+export function ActivitySelectorModal({
+  day,
+  slot,
+  onClose,
+}: ActivitySelectorProps) {
   const { filtered, suggestions } = useActivitySuggestions();
   const { dispatch } = useWeekendPlan();
 
   useEffect(() => {
     const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = prev; };
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
   }, []);
 
   const handleActivitySelect = (activity: Activity) => {
-    dispatch({ 
-      type: 'add', 
-      payload: { 
-        activity, 
-        day, 
-        slot, 
-        durationHours: activity.duration 
-      } 
+    dispatch({
+      type: "add",
+      payload: {
+        activity,
+        day,
+        slot,
+        durationHours: activity.duration,
+      },
     });
     onClose();
   };
@@ -49,9 +55,11 @@ export function ActivitySelectorModal({ day, slot, onClose }: ActivitySelectorPr
           <div className="flex items-center justify-between p-4 border-b bg-white sticky top-0">
             <div>
               <h3 className="text-lg font-semibold">Add Activity</h3>
-              <p className="text-sm text-gray-600">{dayDisplayName} {slotDisplayName}</p>
+              <p className="text-sm text-gray-600">
+                {dayDisplayName} {slotDisplayName}
+              </p>
             </div>
-            <button 
+            <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
               aria-label="Close"
@@ -72,15 +80,14 @@ export function ActivitySelectorModal({ day, slot, onClose }: ActivitySelectorPr
           <div className="flex-1 overflow-y-auto p-4 space-y-6">
             {suggestions.length > 0 && (
               <div>
-                <div className="mb-3 text-sm font-medium text-gray-700">Suggested for {slotDisplayName}</div>
+                <div className="mb-3 text-sm font-medium text-gray-700">
+                  Suggested for {slotDisplayName}
+                </div>
                 <div className="grid grid-cols-1 gap-3">
-                  {suggestions.map(activity => (
-                    <div 
-                      key={activity.id}
-                      className="cursor-pointer"
-                    >
-                      <ActivityCard 
-                        activity={activity} 
+                  {suggestions.map((activity) => (
+                    <div key={activity.id} className="cursor-pointer">
+                      <ActivityCard
+                        activity={activity}
                         dragId={`selector-${activity.id}`}
                         isClickable={true}
                         onClick={() => handleActivitySelect(activity)}
@@ -92,15 +99,14 @@ export function ActivitySelectorModal({ day, slot, onClose }: ActivitySelectorPr
             )}
 
             <div>
-              <div className="mb-3 text-sm font-medium text-gray-700">All Activities</div>
+              <div className="mb-3 text-sm font-medium text-gray-700">
+                All Activities
+              </div>
               <div className="grid grid-cols-1 gap-3">
-                {filtered.map(activity => (
-                  <div 
-                    key={activity.id}
-                    className="cursor-pointer"
-                  >
-                    <ActivityCard 
-                      activity={activity} 
+                {filtered.map((activity) => (
+                  <div key={activity.id} className="cursor-pointer">
+                    <ActivityCard
+                      activity={activity}
                       dragId={`selector-all-${activity.id}`}
                       isClickable={true}
                       onClick={() => handleActivitySelect(activity)}
@@ -123,7 +129,11 @@ interface AddActivityButtonProps {
   className?: string;
 }
 
-export function AddActivityButton({ day, slot, className = '' }: AddActivityButtonProps) {
+export function AddActivityButton({
+  day,
+  slot,
+  className = "",
+}: AddActivityButtonProps) {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -135,12 +145,12 @@ export function AddActivityButton({ day, slot, className = '' }: AddActivityButt
       >
         <Plus size={16} className="text-gray-400 group-hover:text-gray-600" />
       </button>
-      
+
       {showModal && (
-        <ActivitySelectorModal 
-          day={day} 
-          slot={slot} 
-          onClose={() => setShowModal(false)} 
+        <ActivitySelectorModal
+          day={day}
+          slot={slot}
+          onClose={() => setShowModal(false)}
         />
       )}
     </>

@@ -1,5 +1,5 @@
 // Service for handling image export functionality
-import { toBlob } from 'html-to-image';
+import { toBlob } from "html-to-image";
 
 export interface ExportOptions {
   pixelRatio?: number;
@@ -9,7 +9,10 @@ export interface ExportOptions {
 
 export class ImageExportService {
   // Gets the dimensions of an HTML element
-  static getElementDimensions(element: HTMLElement): { width: number; height: number } {
+  static getElementDimensions(element: HTMLElement): {
+    width: number;
+    height: number;
+  } {
     const rect = element.getBoundingClientRect();
     return {
       width: Math.ceil(rect.width) + 2,
@@ -30,18 +33,18 @@ export class ImageExportService {
       pixelRatio: options.pixelRatio ?? 2,
       width,
       height,
-      backgroundColor: options.backgroundColor ?? '#ffffff',
+      backgroundColor: options.backgroundColor ?? "#ffffff",
       style: {
         width: `${width}px`,
         height: `${height}px`,
-        margin: '0',
-        maxWidth: 'none',
+        margin: "0",
+        maxWidth: "none",
         padding: elementPadding,
       },
     });
 
     if (!blob) {
-      throw new Error('Failed to create image blob');
+      throw new Error("Failed to create image blob");
     }
 
     return blob;
@@ -50,12 +53,12 @@ export class ImageExportService {
   // Downloads a blob as a PNG file
   static downloadBlob(blob: Blob, filename: string): void {
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    
+    const link = document.createElement("a");
+
     link.href = url;
     link.download = filename;
     link.click();
-    
+
     // Clean up the URL object
     URL.revokeObjectURL(url);
   }
@@ -63,20 +66,20 @@ export class ImageExportService {
   // Copies a blob to the clipboard (if supported)
   static async copyBlobToClipboard(blob: Blob): Promise<void> {
     if (!this.isClipboardSupported()) {
-      throw new Error('Clipboard API is not supported in this browser');
+      throw new Error("Clipboard API is not supported in this browser");
     }
 
-    const clipboardItem = new window.ClipboardItem({ 'image/png': blob });
+    const clipboardItem = new window.ClipboardItem({ "image/png": blob });
     await navigator.clipboard.write([clipboardItem]);
   }
 
   // Checks if clipboard API is supported
   static isClipboardSupported(): boolean {
     return (
-      typeof navigator !== 'undefined' &&
-      'clipboard' in navigator &&
-      'write' in navigator.clipboard &&
-      typeof window.ClipboardItem !== 'undefined'
+      typeof navigator !== "undefined" &&
+      "clipboard" in navigator &&
+      "write" in navigator.clipboard &&
+      typeof window.ClipboardItem !== "undefined"
     );
   }
 
