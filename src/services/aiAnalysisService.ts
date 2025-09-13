@@ -5,7 +5,7 @@ export class AIAnalysisService {
   private genAI: GoogleGenerativeAI | null = null;
 
   constructor() {
-    const apiKey = import.meta.env.GEMINI_API_KEY;
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (apiKey) {
       this.genAI = new GoogleGenerativeAI(apiKey);
     }
@@ -43,7 +43,7 @@ Write as if you're having a casual conversation about weekend plans.`;
 
   async analyzeSchedule(schedule: WeekendSchedule): Promise<string> {
     if (!this.genAI) {
-      throw new Error('Gemini API key not configured. Please add GEMINI_API_KEY to your environment variables.');
+      throw new Error('Gemini API key not configured. Please add VITE_GEMINI_API_KEY to your environment variables.');
     }
 
     try {
