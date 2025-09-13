@@ -75,6 +75,7 @@ export type WeekendPlanAction =
     }
   | { type: "setTheme"; payload: WeekendTheme | null }
   | { type: "setFilters"; payload: Partial<ActivityFilters> }
+  | { type: "addCustomActivity"; payload: Activity }
   | { type: "clear" }
   | { type: "hydrate"; payload: Partial<WeekendPlanState> }
   | { type: "randomize" };

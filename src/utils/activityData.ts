@@ -21,7 +21,7 @@ export const activities: Activity[] = [
   // Social
   { id: 'friends-001', name: 'Friends Hangout', category: 'social', duration: 3, timeOfDay: 'any', energy: 'medium', icon: '🧑‍🤝‍🧑', color: '#FFE0F0', description: 'Meet up or host a get-together' },
   { id: 'family-001', name: 'Family Time', category: 'social', duration: 3, timeOfDay: 'any', energy: 'medium', icon: '👨‍👩‍👧‍👦', color: '#FFF0D9', description: 'Quality time with family' },
-  { id: 'date-001', name: 'Date Night', category: 'social', duration: 3, timeOfDay: 'evening', energy: 'medium', icon: '💞', color: '#FFD6E7', description: 'Romantic evening plan' },
+  { id: 'date-001', name: 'Date Night', category: 'social', duration: 3, timeOfDay: 'night', energy: 'medium', icon: '💞', color: '#FFD6E7', description: 'Romantic evening plan' },
   
   // Wellness
   { id: 'yoga-001', name: 'Morning Yoga', category: 'wellness', duration: 1, timeOfDay: 'morning', energy: 'low', icon: '🧘', color: '#E6FFFA', description: 'Gentle flow to start the day' },

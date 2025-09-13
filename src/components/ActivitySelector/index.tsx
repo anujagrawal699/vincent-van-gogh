@@ -6,6 +6,7 @@ import type { Activity, Day, Slot } from "../../types";
 import ActivityCard from "../ActivityLibrary/ActivityCard";
 import SearchBar from "../ActivityLibrary/SearchBar";
 import CategoryFilter from "../ActivityLibrary/CategoryFilter";
+import { CreateActivityForm } from "../CreateActivityForm";
 import { Plus, X } from "lucide-react";
 
 interface ActivitySelectorProps {
@@ -21,6 +22,7 @@ export function ActivitySelectorModal({
 }: ActivitySelectorProps) {
   const { filtered, suggestions } = useActivitySuggestions();
   const { dispatch } = useWeekendPlan();
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -43,52 +45,88 @@ export function ActivitySelectorModal({
     onClose();
   };
 
+  const handleCustomActivityCreated = (activity: Activity) => {
+    handleActivitySelect(activity);
+  };
+
   const slotDisplayName = slot.charAt(0).toUpperCase() + slot.slice(1);
   const dayDisplayName = day.charAt(0).toUpperCase() + day.slice(1);
 
   return createPortal(
-    <div className="fixed inset-0 z-[100] overflow-y-auto">
-      <div className="fixed inset-0 z-10 bg-black/50" onClick={onClose} />
-      <div className="relative z-20 flex min-h-full items-end justify-center sm:items-center p-0 sm:p-4">
-        <div className="w-full max-w-2xl rounded-t-xl sm:rounded-xl bg-white shadow-lg max-h-[90vh] overflow-hidden flex flex-col">
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b bg-white sticky top-0">
-            <div>
-              <h3 className="text-lg font-semibold">Add Activity</h3>
-              <p className="text-sm text-gray-600">
-                {dayDisplayName} {slotDisplayName}
-              </p>
+    <>
+      <div className="fixed inset-0 z-[100] overflow-y-auto">
+        <div className="fixed inset-0 z-10 bg-black/50" onClick={onClose} />
+        <div className="relative z-20 flex min-h-full items-end justify-center sm:items-center p-0 sm:p-4">
+          <div className="w-full max-w-2xl rounded-t-xl sm:rounded-xl bg-white shadow-lg max-h-[90vh] overflow-hidden flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b bg-white sticky top-0">
+              <div>
+                <h3 className="text-lg font-semibold">Add Activity</h3>
+                <p className="text-sm text-gray-600">
+                  {dayDisplayName} {slotDisplayName}
+                </p>
+              </div>
+              <button
+                onClick={onClose}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Close"
+              >
+                <X size={20} />
+              </button>
             </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              aria-label="Close"
-            >
-              <X size={20} />
-            </button>
-          </div>
 
-          {/* Search and Filters */}
-          <div className="p-4 border-b bg-gray-50">
-            <div className="space-y-3">
-              <SearchBar />
-              <CategoryFilter />
+            {/* Search and Filters */}
+            <div className="p-4 border-b bg-gray-50">
+              <div className="space-y-3">
+                <div className="flex gap-2">
+                  <div className="flex-1">
+                    <SearchBar />
+                  </div>
+                  <button
+                    onClick={() => setShowCreateForm(true)}
+                    className="px-3 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors flex items-center gap-2 text-sm font-medium whitespace-nowrap"
+                  >
+                    <Plus size={16} />
+                    <span className="hidden sm:inline">Create Custom</span>
+                    <span className="sm:hidden">Custom</span>
+                  </button>
+                </div>
+                <CategoryFilter />
+              </div>
             </div>
-          </div>
 
-          {/* Activity Lists */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-6">
-            {suggestions.length > 0 && (
+            {/* Activity Lists */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-6">
+              {suggestions.length > 0 && (
+                <div>
+                  <div className="mb-3 text-sm font-medium text-gray-700">
+                    Suggested for {slotDisplayName}
+                  </div>
+                  <div className="grid grid-cols-1 gap-3">
+                    {suggestions.map((activity) => (
+                      <div key={activity.id} className="cursor-pointer">
+                        <ActivityCard
+                          activity={activity}
+                          dragId={`selector-${activity.id}`}
+                          isClickable={true}
+                          onClick={() => handleActivitySelect(activity)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div>
                 <div className="mb-3 text-sm font-medium text-gray-700">
-                  Suggested for {slotDisplayName}
+                  All Activities
                 </div>
                 <div className="grid grid-cols-1 gap-3">
-                  {suggestions.map((activity) => (
+                  {filtered.map((activity) => (
                     <div key={activity.id} className="cursor-pointer">
                       <ActivityCard
                         activity={activity}
-                        dragId={`selector-${activity.id}`}
+                        dragId={`selector-all-${activity.id}`}
                         isClickable={true}
                         onClick={() => handleActivitySelect(activity)}
                       />
@@ -96,29 +134,27 @@ export function ActivitySelectorModal({
                   ))}
                 </div>
               </div>
-            )}
-
-            <div>
-              <div className="mb-3 text-sm font-medium text-gray-700">
-                All Activities
-              </div>
-              <div className="grid grid-cols-1 gap-3">
-                {filtered.map((activity) => (
-                  <div key={activity.id} className="cursor-pointer">
-                    <ActivityCard
-                      activity={activity}
-                      dragId={`selector-all-${activity.id}`}
-                      isClickable={true}
-                      onClick={() => handleActivitySelect(activity)}
-                    />
-                  </div>
-                ))}
-              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>,
+
+      {/* Create Activity Form Overlay */}
+      {showCreateForm && (
+        <div className="fixed inset-0 z-[110] overflow-y-auto">
+          <div
+            className="fixed inset-0 z-10 bg-black/60"
+            onClick={() => setShowCreateForm(false)}
+          />
+          <div className="relative z-20 flex min-h-full items-center justify-center p-4">
+            <CreateActivityForm
+              onClose={() => setShowCreateForm(false)}
+              onActivityCreated={handleCustomActivityCreated}
+            />
+          </div>
+        </div>
+      )}
+    </>,
     document.body
   );
 }

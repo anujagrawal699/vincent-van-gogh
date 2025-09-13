@@ -58,15 +58,25 @@ export function reducer(
 
     case "hydrate": {
       const payload = action.payload as Partial<WeekendPlanState>;
-      const selectedTheme =
-        payload.selectedTheme?.id === "default" ? null : payload.selectedTheme;
+      const selectedTheme = payload.selectedTheme?.id === "default" ? null : payload.selectedTheme;
+      
+      // Merge saved custom activities with default activities
+      const savedCustomActivities = payload.activities?.filter(a => a.id.startsWith('custom-')) || [];
+      const mergedActivities = [...defaultActivities, ...savedCustomActivities];
+      
       return {
         ...state,
         ...payload,
-        activities: defaultActivities,
+        activities: mergedActivities,
         selectedTheme,
       } as WeekendPlanState;
     }
+
+    case "addCustomActivity":
+      return { 
+        ...state, 
+        activities: [...state.activities, action.payload] 
+      };
 
     case "randomize": {
       const randomSchedule = WeekendPlanService.generateRandomSchedule(

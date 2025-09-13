@@ -8,12 +8,14 @@ Transform your weekend planning into an art form. Weekendly is an interactive we
 
 **Core Experience**
 - **Activity Library** — Browse 24+ handpicked weekend activities
+- **Custom Activity** — Create your own weekend activities
 - **Visual Timeline** — Drag activities into morning, afternoon, evening, and night slots
 - **Van Gogh Themes** — Choose from 5 artistic moods, each featuring a different Van Gogh painting
 - **Auto-Save** — Your plans persist between sessions
 - **Responsive Design** — Beautiful on desktop and mobile
 
 **Smart Features**
+- **Drag & Drop** — Drag and drop activities into the schedule
 - **"Surprise Me"** — Generate random weekend adventures
 - **Smart Search** — Filter by activity type, energy level, and time of day
 - **Theme-Based Suggestions** — Get personalized activity recommendations based on your weekend theme

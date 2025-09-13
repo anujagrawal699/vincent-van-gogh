@@ -3,16 +3,6 @@ import { vanGoghPaintings } from "./vanGoghBackgrounds";
 
 export const themes: WeekendTheme[] = [
   {
-    id: 'default',
-    name: 'Default',
-    mood: 'balanced',
-    colors: ['#F3F4F6', '#D1D5DB', '#9CA3AF'],
-    suggestedActivities: ['reading-001', 'walk-001', 'coffee-001', 'relax-001'],
-    backgroundPattern: 'simple',
-    vanGoghPainting: vanGoghPaintings['default'].name,
-    vanGoghImage: `/${vanGoghPaintings['default'].imageUrl}`,
-  },
-  {
     id: 'cozy-homebody',
     name: 'Cozy Homebody',
     mood: 'relaxed',

@@ -69,41 +69,41 @@ export function PosterPreview({ innerRef }: PosterPreviewProps) {
     <div className="flex justify-center">
       <div
         ref={innerRef}
-        className="w-[960px] rounded-2xl border shadow-md"
+        className="w-full max-w-[960px] mx-4 sm:w-[960px] sm:mx-0 rounded-2xl border shadow-md"
         style={{
           fontFamily:
             "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, Ubuntu, Cantarell, Helvetica Neue",
           ...backgroundStyle,
         }}
       >
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="text-2xl" aria-hidden>
                 🗓️
               </div>
-              <div className="text-xl font-semibold text-gray-900">
+              <div className="md:text-xl sm:text-lg font-semibold text-gray-900">
                 Weekendly - Van Gogh Edition
               </div>
             </div>
-            <div className="text-sm bg-gray-300 p-1 rounded text-gray-700">
+            <div className="text-sm hidden md:block bg-gray-300 p-1 rounded text-gray-700">
               My Weekend Plan
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <DayColumn day="saturday" title="Saturday" />
             <DayColumn day="sunday" title="Sunday" />
           </div>
 
-          <div className="mt-6 border-t pt-3 text-center text-xs text-gray-700">
-            <div className="flex flex-col gap-1 ">
+          <div className="mt-4 sm:mt-6 border-t pt-3 text-center text-xs text-gray-700">
+            <div className="flex flex-col gap-1">
               <div className="bg-gray-300 p-1 rounded">
                 Made with ❤️ for Atlan • Weekendly
               </div>
-              <div className="flex items-center justify-center gap-1 text-gray-700 bg-gray-300 p-1 rounded">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-1 text-gray-700 bg-gray-300 p-1 rounded">
                 <span>🎨</span>
-                <span>
+                <span className="text-center">
                   Background: "
                   {state.selectedTheme?.vanGoghPainting ||
                     getVanGoghPainting("default")?.name}

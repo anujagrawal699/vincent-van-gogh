@@ -34,41 +34,77 @@ export class WeekendPlanService {
       return activities.filter((a) => a.category === category);
     };
 
+    const getActivitiesForTimeSlot = (
+      category: Activity["category"],
+      timeSlot: "morning" | "afternoon" | "evening" | "night"
+    ): Activity[] => {
+      return activities.filter(
+        (a) =>
+          a.category === category &&
+          (a.timeOfDay === timeSlot || a.timeOfDay === "any")
+      );
+    };
+
     const createDaySchedule = (day: Day): ScheduledActivity[] => {
-      // Morning: Wellness activity
+      // Morning: Wellness activity suitable for morning
+      const morningWellnessActivities = getActivitiesForTimeSlot(
+        "wellness",
+        "morning"
+      );
       const morningActivity = this.createScheduledActivity(
-        pickRandomActivity(getActivitiesByCategory("wellness")),
+        pickRandomActivity(
+          morningWellnessActivities.length > 0
+            ? morningWellnessActivities
+            : getActivitiesByCategory("wellness")
+        ),
         day,
         "morning",
         1
       );
 
-      // Afternoon: Outdoor activity
+      // Afternoon: Outdoor activity suitable for afternoon
+      const afternoonOutdoorActivities = getActivitiesForTimeSlot(
+        "outdoor",
+        "afternoon"
+      );
       const afternoonActivity = this.createScheduledActivity(
-        pickRandomActivity(getActivitiesByCategory("outdoor")),
+        pickRandomActivity(
+          afternoonOutdoorActivities.length > 0
+            ? afternoonOutdoorActivities
+            : getActivitiesByCategory("outdoor")
+        ),
         day,
         "afternoon",
         2
       );
 
-      // Evening: Meal activity
+      // Evening: Meal activity suitable for evening
+      const eveningMealActivities = getActivitiesForTimeSlot("meal", "evening");
       const eveningActivity = this.createScheduledActivity(
-        pickRandomActivity(getActivitiesByCategory("meal")),
+        pickRandomActivity(
+          eveningMealActivities.length > 0
+            ? eveningMealActivities
+            : getActivitiesByCategory("meal")
+        ),
         day,
         "evening",
         2
       );
 
-      // Night: Mix of social/outdoor/indoor/meal activities
-      const nightCategoryPool: Activity[] = [
-        ...getActivitiesByCategory("social"),
-        ...getActivitiesByCategory("outdoor"),
-        ...getActivitiesByCategory("indoor"),
-        ...getActivitiesByCategory("meal"),
-      ];
+      // Night: Activities specifically suited for night time
+      const nightActivities = activities.filter(
+        (a) =>
+          a.timeOfDay === "night" ||
+          (a.timeOfDay === "any" &&
+            ["social", "indoor", "meal"].includes(a.category))
+      );
 
       const nightActivity = this.createScheduledActivity(
-        pickRandomActivity(nightCategoryPool),
+        pickRandomActivity(
+          nightActivities.length > 0
+            ? nightActivities
+            : getActivitiesByCategory("social")
+        ),
         day,
         "night",
         1
