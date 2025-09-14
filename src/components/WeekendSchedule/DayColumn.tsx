@@ -8,8 +8,8 @@ export function DayColumn({
   day: "saturday" | "sunday";
   title: string;
 }) {
-  const { state, conflicts } = useWeekendPlan();
-  const hasConflict = conflicts.hasConflict && state.schedule[day].length > 1;
+  const { conflicts } = useWeekendPlan();
+  const hasConflict = conflicts.conflictsByDay[day];
 
   return (
     <div className="flex flex-col gap-3">

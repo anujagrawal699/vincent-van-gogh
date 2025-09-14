@@ -82,6 +82,8 @@ describe("TimeSlotService", () => {
 
       expect(result.hasConflict).toBe(false);
       expect(result.conflictPairs).toHaveLength(0);
+      expect(result.conflictsByDay.saturday).toBe(false);
+      expect(result.conflictsByDay.sunday).toBe(false);
     });
 
     it("detects conflicts when slot capacity is exceeded", () => {
@@ -94,6 +96,24 @@ describe("TimeSlotService", () => {
 
       expect(result.hasConflict).toBe(true);
       expect(result.conflictPairs).toHaveLength(1);
+      expect(result.conflictsByDay.saturday).toBe(true);
+      expect(result.conflictsByDay.sunday).toBe(false);
+    });
+
+    it("detects conflicts for specific days correctly", () => {
+      const activities = [
+        createMockActivity("1", "saturday", "morning", 2),
+        createMockActivity("2", "saturday", "afternoon", 2),
+        createMockActivity("3", "sunday", "morning", 3),
+        createMockActivity("4", "sunday", "morning", 2),
+      ];
+
+      const result = TimeSlotService.detectConflicts(activities);
+
+      expect(result.hasConflict).toBe(true);
+      expect(result.conflictPairs).toHaveLength(1);
+      expect(result.conflictsByDay.saturday).toBe(false);
+      expect(result.conflictsByDay.sunday).toBe(true);
     });
   });
 

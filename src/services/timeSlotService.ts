@@ -67,19 +67,31 @@ export class TimeSlotService {
   static detectConflicts(activities: ScheduledActivity[]): {
     hasConflict: boolean;
     conflictPairs: [ScheduledActivity, ScheduledActivity][];
+    conflictsByDay: {
+      saturday: boolean;
+      sunday: boolean;
+    };
   } {
     const conflictPairs: [ScheduledActivity, ScheduledActivity][] = [];
+    const conflictsByDay = { saturday: false, sunday: false };
 
     const activitiesByDay = this.groupActivitiesByDay(activities);
 
     (["saturday", "sunday"] as const).forEach((day) => {
       const dayActivities = activitiesByDay[day];
-      this.findConflictsInDay(dayActivities, conflictPairs);
+      const dayConflictPairs: [ScheduledActivity, ScheduledActivity][] = [];
+      this.findConflictsInDay(dayActivities, dayConflictPairs);
+
+      if (dayConflictPairs.length > 0) {
+        conflictsByDay[day] = true;
+        conflictPairs.push(...dayConflictPairs);
+      }
     });
 
     return {
       hasConflict: conflictPairs.length > 0,
       conflictPairs,
+      conflictsByDay,
     };
   }
 
