@@ -1,14 +1,14 @@
-# _ly — Paint Your Perfect _
+# Weekendly — Paint Your Perfect weekend
 
 > *"I dream of painting and then I paint my dream."* — Vincent van Gogh
 
-Transform your _ planning into an art form. _ly is an interactive _ planner that helps you curate memorable Saturday-Sunday experiences, each painted with the beauty of Van Gogh's masterpieces.
+Transform your weekend planning into an art form. Weekendly is an interactive weekend planner that helps you curate memorable Saturday-Sunday experiences, each painted with the beauty of Van Gogh's masterpieces.
 
 ## Features
 
 **Core Experience**
-- **Activity Library** — Browse 24+ handpicked _ activities
-- **Custom Activity** — Create your own _ activities
+- **Activity Library** — Browse 24+ handpicked weekend activities
+- **Custom Activity** — Create your own weekend activities
 - **Visual Timeline** — Drag activities into morning, afternoon, evening, and night slots
 - **Van Gogh Themes** — Choose from 5 artistic moods, each featuring a different Van Gogh painting
 - **Auto-Save** — Your plans persist between sessions
@@ -16,12 +16,12 @@ Transform your _ planning into an art form. _ly is an interactive _ planner that
 
 **Smart Features**
 - **Drag & Drop** — Drag and drop activities into the schedule
-- **"Surprise Me"** — Generate random _ adventures
+- **"Surprise Me"** — Generate random weekend adventures
 - **Smart Search** — Filter by activity type, energy level, and time of day
-- **Theme-Based Suggestions** — Get personalized activity recommendations based on your _ theme
+- **Theme-Based Suggestions** — Get personalized activity recommendations based on your weekend theme
 - **Conflict Detection** — Automatically spots scheduling overlaps
-- **AI Schedule Analysis** — Inline AI insights panel gives a friendly, concise _ summary
-- **Share & Export** — Download your _ plan as a beautiful poster
+- **AI Schedule Analysis** — Inline AI insights panel gives a friendly, concise weekend summary
+- **Share & Export** — Download your weekend plan as a beautiful poster
 
 **Artistic Touch**
 - **Dynamic Backgrounds** — Each theme transforms the entire app with Van Gogh's art
@@ -32,11 +32,12 @@ Transform your _ planning into an art form. _ly is an interactive _ planner that
 
 | Theme | Painting | Mood | Perfect For |
 |-------|----------|------|-------------|
-| **Cozy Homebody** | *The Bedroom* (1888) | Relaxed | Reading, cooking, spa days |
 | **Adventure Seeker** | *Starry Night* (1889) | Energetic | Hiking, exploring, outdoor fun |
 | **Social Butterfly** | *Dance Hall in Arles* (1888) | Extroverted | Friends, parties, social events |
 | **Wellness Warrior** | *Wheatfield with Cypresses* (1889) | Balanced | Yoga, meditation, nature walks |
 | **Creative Artist** | *Sunflowers* (1888) | Inspired | Art projects, music, writing |
+| **Cozy Homebody** | *The Bedroom* (1888) | Relaxed | Reading, cooking, spa days |
+
 
 ## Built With
 
@@ -70,10 +71,10 @@ npm test          # Run tests
 
 ## Design Philosophy
 
-_ly combines the practical need for _ planning with the inspiration of Van Gogh's artistry. Just as Van Gogh painted ordinary subjects with extraordinary beauty, this app transforms mundane scheduling into something delightful and inspiring.
+Weekendly combines the practical need for weekend planning with the inspiration of Van Gogh's artistry. Just as Van Gogh painted ordinary subjects with extraordinary beauty, this app transforms mundane scheduling into something delightful and inspiring.
 
 The interface adapts to your chosen theme, creating an immersive experience where planning feels less like a chore and more like creating a masterpiece.
 
 ---
 
-*Made with ❤️ for Atlan & thoughtful _ planning*
+*Made with ❤️ for Atlan & thoughtful weekend planning*
