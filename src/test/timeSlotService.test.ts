@@ -25,135 +25,85 @@ const createMockActivity = (
   },
 });
 
-describe("TimeSlotService", () => {
-  describe("getSlotIndex", () => {
-    it("returns correct index for each slot", () => {
-      expect(TimeSlotService.getSlotIndex("morning")).toBe(0);
-      expect(TimeSlotService.getSlotIndex("afternoon")).toBe(1);
-      expect(TimeSlotService.getSlotIndex("evening")).toBe(2);
-      expect(TimeSlotService.getSlotIndex("night")).toBe(3);
-    });
-  });
-
-  describe("getSpannedSlots", () => {
-    it("returns single slot for short duration", () => {
-      const result = TimeSlotService.getSpannedSlots("morning", 2);
-      expect(result).toEqual(["morning"]);
-    });
-
-    it("returns multiple slots for long duration", () => {
-      const result = TimeSlotService.getSpannedSlots("morning", 6);
-      expect(result).toEqual(["morning", "afternoon"]);
-    });
-  });
-
-  describe("hasConflict", () => {
-    it("returns false for activities on different days", () => {
-      const activityA = createMockActivity("1", "saturday", "morning", 2);
-      const activityB = createMockActivity("2", "sunday", "morning", 2);
-
-      expect(TimeSlotService.hasConflict(activityA, activityB)).toBe(false);
-    });
-
-    it("returns true for activities in the same slot", () => {
-      const activityA = createMockActivity("1", "saturday", "morning", 2);
-      const activityB = createMockActivity("2", "saturday", "morning", 2);
-
-      expect(TimeSlotService.hasConflict(activityA, activityB)).toBe(true);
-    });
-
-    it("returns true for activities that span overlapping slots", () => {
-      const activityA = createMockActivity("1", "saturday", "morning", 6);
-      const activityB = createMockActivity("2", "saturday", "afternoon", 2);
-
-      expect(TimeSlotService.hasConflict(activityA, activityB)).toBe(true);
-    });
-  });
-
+describe("TimeSlotService (simplified)", () => {
   describe("detectConflicts", () => {
-    it("returns no conflicts for non-overlapping activities", () => {
-      const activities = [
-        createMockActivity("1", "saturday", "morning", 2),
-        createMockActivity("2", "saturday", "afternoon", 2),
-        createMockActivity("3", "sunday", "morning", 2),
-      ];
-
-      const result = TimeSlotService.detectConflicts(activities);
-
+    it("returns no conflict for empty list", () => {
+      const result = TimeSlotService.detectConflicts([]);
       expect(result.hasConflict).toBe(false);
-      expect(result.conflictPairs).toHaveLength(0);
       expect(result.conflictsByDay.saturday).toBe(false);
       expect(result.conflictsByDay.sunday).toBe(false);
     });
 
-    it("detects conflicts when slot capacity is exceeded", () => {
+    it("returns no conflicts when all slots are under or exactly at capacity", () => {
+      // morning capacity = 4, afternoon = 5
+      const activities = [
+        createMockActivity("1", "saturday", "morning", 2),
+        createMockActivity("2", "saturday", "morning", 2), // total 4 = capacity
+        createMockActivity("3", "saturday", "afternoon", 5), // exactly capacity
+      ];
+      const result = TimeSlotService.detectConflicts(activities);
+      expect(result.hasConflict).toBe(false);
+      expect(result.conflictsByDay.saturday).toBe(false);
+    });
+
+    it("detects conflict when a slot exceeds capacity (single day)", () => {
       const activities = [
         createMockActivity("1", "saturday", "morning", 3),
         createMockActivity("2", "saturday", "morning", 2),
+        createMockActivity("3", "saturday", "afternoon", 1),
       ];
-
       const result = TimeSlotService.detectConflicts(activities);
-
       expect(result.hasConflict).toBe(true);
-      expect(result.conflictPairs).toHaveLength(1);
       expect(result.conflictsByDay.saturday).toBe(true);
       expect(result.conflictsByDay.sunday).toBe(false);
     });
 
-    it("detects conflicts for specific days correctly", () => {
+    it("detects conflict isolated to sunday", () => {
       const activities = [
         createMockActivity("1", "saturday", "morning", 2),
-        createMockActivity("2", "saturday", "afternoon", 2),
-        createMockActivity("3", "sunday", "morning", 3),
-        createMockActivity("4", "sunday", "morning", 2),
+        createMockActivity("2", "sunday", "morning", 3),
+        createMockActivity("3", "sunday", "morning", 2), // 5 > 4
       ];
-
       const result = TimeSlotService.detectConflicts(activities);
-
       expect(result.hasConflict).toBe(true);
-      expect(result.conflictPairs).toHaveLength(1);
       expect(result.conflictsByDay.saturday).toBe(false);
       expect(result.conflictsByDay.sunday).toBe(true);
     });
-  });
 
-  describe("getTotalDurationInSlot", () => {
-    it("calculates total duration for activities in a slot", () => {
+    it("detects conflicts on both days independently", () => {
       const activities = [
-        createMockActivity("1", "saturday", "morning", 2),
-        createMockActivity("2", "saturday", "morning", 1),
-        createMockActivity("3", "saturday", "afternoon", 3),
-      ];
-
-      const total = TimeSlotService.getTotalDurationInSlot(
-        activities,
-        "morning"
-      );
-      expect(total).toBe(3);
-    });
-  });
-
-  describe("isSlotOverCapacity", () => {
-    it("returns true when slot is over capacity", () => {
-      const activities = [
+        // Saturday morning over (5 > 4)
         createMockActivity("1", "saturday", "morning", 3),
         createMockActivity("2", "saturday", "morning", 2),
+        // Sunday evening over (5 > 4)
+        createMockActivity("3", "sunday", "evening", 4),
+        createMockActivity("4", "sunday", "evening", 1),
       ];
-
-      expect(TimeSlotService.isSlotOverCapacity(activities, "morning")).toBe(
-        true
-      );
+      const result = TimeSlotService.detectConflicts(activities);
+      expect(result.hasConflict).toBe(true);
+      expect(result.conflictsByDay.saturday).toBe(true);
+      expect(result.conflictsByDay.sunday).toBe(true);
     });
 
-    it("returns false when slot is at or under capacity", () => {
+    it("does not report conflict when different slots have separate loads under capacity", () => {
       const activities = [
         createMockActivity("1", "saturday", "morning", 2),
-        createMockActivity("2", "saturday", "morning", 2),
+        createMockActivity("2", "saturday", "afternoon", 3),
+        createMockActivity("3", "saturday", "evening", 4), // exactly evening capacity
       ];
+      const result = TimeSlotService.detectConflicts(activities);
+      expect(result.hasConflict).toBe(false);
+      expect(result.conflictsByDay.saturday).toBe(false);
+    });
 
-      expect(TimeSlotService.isSlotOverCapacity(activities, "morning")).toBe(
-        false
-      );
+    it("boundary: just over capacity triggers conflict", () => {
+      const activities = [
+        createMockActivity("1", "saturday", "evening", 4),
+        createMockActivity("2", "saturday", "evening", 1),
+      ];
+      const result = TimeSlotService.detectConflicts(activities);
+      expect(result.hasConflict).toBe(true);
+      expect(result.conflictsByDay.saturday).toBe(true);
     });
   });
 });

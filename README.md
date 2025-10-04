@@ -67,7 +67,7 @@ src/
 npm test          # Run tests
 ```
 
-22 tests covering core functionality, ensuring reliability and maintainability.
+18 tests covering core functionality, ensuring reliability and maintainability.
 
 ## Design Philosophy
 
