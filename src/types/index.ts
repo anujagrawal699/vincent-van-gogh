@@ -29,9 +29,7 @@ export interface WeekendTheme {
   mood: string;
   colors: string[]; // primary palette (min 3)
   suggestedActivities: string[]; // activity ids or slugs
-  backgroundPattern: string; // token name
   vanGoghPainting?: string; // name of the Van Gogh painting
-  vanGoghImage?: string; // URL or path to the painting image
 }
 
 export type Slot = "morning" | "afternoon" | "evening" | "night";
