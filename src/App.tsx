@@ -4,7 +4,14 @@ import {
   getVanGoghBackgroundStyle,
   getVanGoghPainting,
 } from "./utils/vanGoghBackgrounds";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragOverlay,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  KeyboardSensor,
+} from "@dnd-kit/core";
 import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { useState } from "react";
 import type { Activity } from "./types";
@@ -21,6 +28,11 @@ function AppShell() {
   // Get Van Gogh background style based on selected theme
   const backgroundStyle = getVanGoghBackgroundStyle(
     state.selectedTheme?.id || null
+  );
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor)
   );
 
   type ActivityDragData = { type: "activity"; activity: Activity };
@@ -174,7 +186,11 @@ function AppShell() {
   );
 
   return (
-    <DndContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+    <DndContext
+      sensors={sensors}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+    >
       {content}
       <DragOverlay>
         {activeActivity && (

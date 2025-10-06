@@ -17,9 +17,7 @@ export function useTheme() {
       mood: "classic",
       colors: ["#111827", "#374151", "#9CA3AF"],
       suggestedActivities: [],
-      backgroundPattern: "none",
       vanGoghPainting: "The Mulberry Tree",
-      vanGoghImage: "/mulberry-tree.jpg",
     }),
     []
   );
